@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#040d1a">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<title>LP MOD60 - Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600;700;800;900&display=swap"></noscript>
+<style>
+:root{
+  --bg:#040d1a;--bg2:#071428;--bg3:#0a1d3a;
+  --cyan:#00e5ff;--cyan2:#00b4cc;
+  --gold:#ffc107;--text:#e0f7ff;--text2:#90caf9;
+  --b1:#00e5ff22;--b2:#00e5ff44;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+html,body{width:100%;overflow-x:hidden;background:var(--bg);color:var(--text);min-height:100vh;display:flex;justify-content:center;align-items:center;position:relative;-webkit-text-size-adjust:100%}
+
+/* PARTICLES */
+.pts{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.pt{position:absolute;width:3px;height:3px;background:var(--cyan);border-radius:50%;opacity:.4;animation:fl 18s infinite ease-in-out;box-shadow:0 0 8px var(--cyan)}
+@keyframes fl{0%,100%{transform:translateY(0) translateX(0)}25%{transform:translateY(-100px) translateX(50px)}50%{transform:translateY(-200px) translateX(-30px)}75%{transform:translateY(-100px) translateX(70px)}}
+
+/* CLOCK BADGE */
+.info-badge{position:absolute;top:18px;right:18px;background:var(--bg2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:9px 16px;border-radius:50px;font-size:.73rem;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:8px;z-index:10;border:1px solid var(--b2);box-shadow:0 0 16px #00e5ff12}
+.info-badge i{color:var(--cyan);font-size:.73rem}
+
+/* CARD */
+.card{width:92%;max-width:460px;background:linear-gradient(135deg,#071428f0,#0a1d3af0);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--b2);border-radius:28px;padding:38px 30px 32px;box-shadow:0 0 60px #00e5ff10,0 20px 60px #00000090;position:relative;z-index:5;animation:slideUp .7s ease forwards;opacity:0;transform:translateY(28px);overflow:hidden}
+.card::before{content:'';position:absolute;inset:-1px;background:linear-gradient(135deg,#00e5ff28,transparent 50%,#00e5ff18);border-radius:29px;z-index:-1;animation:bGlow 3s infinite alternate}
+.card::after{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:260px;height:120px;background:radial-gradient(ellipse,#00e5ff10,transparent 70%);pointer-events:none}
+@keyframes slideUp{to{opacity:1;transform:translateY(0)}}
+@keyframes bGlow{0%{opacity:.5}100%{opacity:1}}
+
+/* LOGO */
+.logo-wrap{text-align:center;margin-bottom:22px}
+.logo-shield{width:88px;height:88px;margin:0 auto 14px;background:radial-gradient(circle,#00e5ff14,transparent);border-radius:50%;border:2px solid var(--b2);display:flex;justify-content:center;align-items:center;animation:pulse 3s infinite ease-in-out}
+@keyframes pulse{0%,100%{box-shadow:0 0 20px #00e5ff18;transform:scale(1)}50%{box-shadow:0 0 40px #00e5ff35;transform:scale(1.04)}}
+.logo-shield img{width:78%;height:78%;object-fit:contain;border-radius:50%}
+.logo-shield i{font-size:44px;color:var(--cyan)}
+.logo-title{font-family:'Rajdhani',sans-serif;font-size:1.9rem;font-weight:700;background:linear-gradient(135deg,var(--cyan),#82b1ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:2px;margin-bottom:4px}
+.logo-sub{color:var(--text2);font-size:.8rem;font-weight:500}
+
+/* ADMIN NOTE */
+.admin-note{background:#00e5ff0d;border:1px solid var(--b2);border-radius:12px;padding:9px 14px;margin:16px 0 20px;font-size:.76rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:7px;color:var(--cyan2)}
+.admin-note i{color:var(--cyan)}
+
+/* SOCIAL 2x2 */
+.social-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.s-btn{padding:12px 8px;background:var(--bg3);border:1px solid var(--b2);border-bottom:3px solid #02080f;border-radius:14px;font-weight:700;font-size:.78rem;color:var(--text);display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;transition:.2s;position:relative;overflow:hidden}
+.s-btn::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(0,229,255,.1);border-radius:50%;transform:translate(-50%,-50%);transition:width .4s,height .4s}
+.s-btn:hover::before{width:250px;height:250px}
+.s-btn:hover{border-color:var(--cyan);box-shadow:0 0 14px #00e5ff25;transform:translateY(-2px)}
+.s-btn span{position:relative;z-index:1}
+.s-btn i{position:relative;z-index:1}
+
+/* INPUT */
+.inp-label{font-size:.68rem;font-weight:700;color:var(--cyan2);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.inp-wrap{display:flex;align-items:center;background:var(--bg);border:1.5px solid var(--b1);border-radius:50px;padding:4px 6px 4px 18px;margin-bottom:16px;transition:.2s;box-shadow:inset 0 2px 8px #00000050}
+.inp-wrap:focus-within{border-color:var(--cyan);box-shadow:0 0 0 3px #00e5ff15,inset 0 2px 8px #00000050}
+.inp-wrap i{color:#1e3a5a;font-size:.85rem;margin-right:8px}
+.inp-wrap input{flex:1;height:44px;border:none;outline:none;background:transparent;color:var(--text);font-size:.9rem;font-weight:600;letter-spacing:2px}
+.inp-wrap input::placeholder{color:#1e3a5a;letter-spacing:1px;font-weight:400}
+.pw-toggle{background:none;border:none;color:#1e3a5a;cursor:pointer;padding:6px 10px;font-size:.82rem;transition:.2s}
+.pw-toggle:hover{color:var(--cyan)}
+
+/* ERROR */
+.err-box{background:rgba(231,76,60,.09);border:1px solid #e74c3c30;border-radius:10px;padding:9px 14px;font-size:.76rem;color:#e74c3c;margin-bottom:12px;display:none;text-align:center}
+
+/* LOGIN BTN */
+.login-btn{width:100%;padding:15px;background:linear-gradient(135deg,#0077b6,#023e8a);color:#fff;border:none;border-radius:50px;font-size:.95rem;font-weight:800;cursor:pointer;transition:.2s;border-bottom:4px solid #011f4b;box-shadow:0 0 20px #0096c735;letter-spacing:2px;text-transform:uppercase;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:10px}
+.login-btn::before{content:'';position:absolute;top:-50%;left:-60%;width:40%;height:200%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);transform:skewX(-20deg);animation:shine 3s infinite}
+@keyframes shine{0%{left:-60%}100%{left:160%}}
+.login-btn:hover{background:linear-gradient(135deg,#0096c7,#0077b6);box-shadow:0 0 28px #00e5ff40;transform:translateY(-2px)}
+.login-btn:active{transform:translateY(0)}
+.login-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+
+.loading-inline{display:none;text-align:center;color:var(--cyan2);font-size:.8rem;margin-bottom:10px;font-weight:700;letter-spacing:1px}
+
+.bottom-note{margin-top:12px;font-size:.7rem;color:var(--text2);text-align:center;font-weight:500;opacity:.8}
+.bottom-note strong{color:var(--cyan);font-weight:800}
+
+/* SUCCESS */
+.success-overlay{position:fixed;inset:0;background:var(--bg);display:none;justify-content:center;align-items:center;flex-direction:column;z-index:9999}
+.success-check{width:110px;height:110px;background:linear-gradient(135deg,var(--cyan),#0077b6);border-radius:50%;display:flex;justify-content:center;align-items:center;margin-bottom:22px;animation:sPop .8s ease .3s forwards;transform:scale(0);box-shadow:0 0 60px #00e5ff60}
+.success-check i{font-size:56px;color:#fff}
+@keyframes sPop{0%{transform:scale(0) rotate(0)}50%{transform:scale(1.12) rotate(180deg)}100%{transform:scale(1) rotate(360deg)}}
+.success-text{font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--cyan),#82b1ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:3px;opacity:0;animation:tSlide .8s ease 1s forwards}
+.success-sub{font-size:.85rem;color:var(--text2);margin-top:8px;opacity:0;animation:tSlide .8s ease 1.3s forwards}
+@keyframes tSlide{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* POPUP */
+#lp-popup-wrap{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);z-index:9990;display:none;justify-content:center;align-items:center}
+.lp-popup-box{position:relative;max-width:92vw;max-height:88vh;background:#000;border-radius:18px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.95);animation:lpPop .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes lpPop{from{transform:scale(.82);opacity:0}to{transform:scale(1);opacity:1}}
+.lp-popup-close{position:absolute;top:9px;right:10px;background:rgba(0,0,0,.7);border:1px solid #555;color:#fff;border-radius:50%;width:30px;height:30px;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:.2s}
+.lp-popup-close:hover{background:rgba(220,53,69,.85)}
+#lp-popup-link{display:block;line-height:0}
+#lp-popup-img{max-width:92vw;max-height:88vh;width:auto;height:auto;display:block;border-radius:18px}
+#lp-popup-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:7px}
+.lpd{height:8px;border-radius:4px;cursor:pointer;background:rgba(255,255,255,.4);transition:.2s;flex-shrink:0;border:none}
+.lpd.a{background:#fff;width:20px!important}
+
+.credit{position:absolute;bottom:14px;left:0;width:100%;text-align:center;font-size:.68rem;color:#1e3a5a;font-weight:600;z-index:10}
+</style>
+</head>
+<body>
+
+<div class="pts" id="pts"></div>
+
+<div class="info-badge">
+  <i class="fas fa-clock"></i><span id="current-time">--:-- IST</span>
+  <i class="fas fa-flag" style="margin-left:6px"></i><span>IN</span>
+</div>
+
+<div class="card">
+  <div class="logo-wrap">
+    <div class="logo-shield">
+      <img src="/static/images/t.gif" alt="LP MOD60"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <i class="fas fa-bolt" style="display:none"></i>
+    </div>
+    <div class="logo-title">LP MOD60</div>
+    <div class="logo-sub">Free Fire Emote Sender</div>
+  </div>
+
+  <div class="admin-note">
+    <i class="fas fa-shield-alt"></i> App Admin: @lpmod60
+  </div>
+
+  <!-- SOCIAL 4 BUTTONS -->
+  <div class="social-grid">
+    <a href="https://www.instagram.com/lpmod60" target="_blank" class="s-btn">
+      <i class="fab fa-instagram" style="color:#e1306c"></i><span>Instagram</span>
+    </a>
+    <a href="{{ youtube_url or 'https://www.youtube.com/@lpmod60' }}" target="_blank" class="s-btn">
+      <i class="fab fa-youtube" style="color:#f44336"></i><span>YouTube</span>
+    </a>
+    <a href="{{ telegram_url or 'https://t.me/lpmod60' }}" target="_blank" class="s-btn">
+      <i class="fab fa-telegram" style="color:#29b6f6"></i><span>Telegram</span>
+    </a>
+    <a href="{{ contact_url or 'https://wa.me/916262716735' }}" target="_blank" class="s-btn">
+      <i class="fab fa-whatsapp" style="color:#25d366"></i><span>WhatsApp</span>
+    </a>
+  </div>
+
+  <!-- PASSWORD -->
+  <div class="inp-label"><i class="fas fa-lock"></i>Enter Password</div>
+  <div class="inp-wrap">
+    <i class="fas fa-key"></i>
+    <input type="password" id="password" placeholder="••••••••" autocomplete="off">
+    <button class="pw-toggle" onclick="togglePw()" type="button">
+      <i class="fas fa-eye" id="pw-eye"></i>
+    </button>
+  </div>
+
+  <div class="err-box" id="pw-err"></div>
+
+  <button class="login-btn" id="loginBtn" onclick="doLogin()">
+    <i class="fas fa-sign-in-alt"></i> LOGIN
+  </button>
+  <div class="loading-inline" id="loading-inline">
+    <i class="fas fa-spinner fa-spin"></i>&nbsp;Verifying...
+  </div>
+
+  <div class="bottom-note">
+    EMOTE APP: <strong>IND SERVER</strong> | SPEED: <strong>ULTRA FAST</strong>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="success-overlay" id="success">
+  <div class="success-check"><i class="fas fa-check"></i></div>
+  <div class="success-text">ACCESS GRANTED!</div>
+  <div class="success-sub">WELCOME TO LP MOD60</div>
+</div>
+
+<!-- POPUP -->
+<div id="lp-popup-wrap">
+  <div class="lp-popup-box">
+    <button class="lp-popup-close" onclick="closeLPopup()">✕</button>
+    <a id="lp-popup-link" href="#" target="_blank">
+      <img id="lp-popup-img" src="" alt="">
+    </a>
+    <div id="lp-popup-dots"></div>
+  </div>
+</div>
+
+<div class="credit">DESIGNED BY LP MOD60</div>
+
+<script>
+// CLOCK
+document.getElementById('current-time').textContent =
+  new Date().toLocaleTimeString('en-US',{timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit',hour12:true})
+  .replace(/AM|PM/i,m=>m+' IST').toUpperCase();
+
+// PARTICLES
+(function(){
+  const c=document.getElementById('pts');
+  [{t:'10%',l:'20%',d:'0s'},{t:'30%',l:'80%',d:'2s'},{t:'60%',l:'10%',d:'4s'},
+   {t:'80%',l:'70%',d:'1s'},{t:'40%',l:'50%',d:'3s'},{t:'20%',l:'60%',d:'5s'},
+   {t:'70%',l:'30%',d:'3.5s'},{t:'50%',l:'90%',d:'1.5s'}]
+  .forEach(function(p){
+    const el=document.createElement('div');
+    el.className='pt';
+    el.style.cssText='top:'+p.t+';left:'+p.l+';animation-delay:'+p.d;
+    c.appendChild(el);
+  });
+})();
+
+// UTILS
+function _lsGet(k){try{return localStorage.getItem(k)||''}catch(e){return ''}}
+function _lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function _setCookie(n,v,days){
+  try{const d=new Date();d.setTime(d.getTime()+days*864e5);
+  document.cookie=n+'='+encodeURIComponent(v)+';expires='+d.toUTCString()+';path=/;SameSite=Lax'}catch(e){}
+}
+function _getCookie(n){
+  try{const m=document.cookie.match(new RegExp('(?:^|; )'+n+'=([^;]*)'));return m?decodeURIComponent(m[1]):''}catch(e){return ''}}
+
+// DEVICE ID
+function getDeviceId(){
+  let d=_lsGet('lp_did');
+  if(!d){d='d_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8);_lsSet('lp_did',d);_setCookie('lp_did',d,730);}
+  return d;
+}
+
+// PASSWORD TOGGLE
+function togglePw(){
+  const inp=document.getElementById('password');
+  const eye=document.getElementById('pw-eye');
+  if(inp.type==='password'){inp.type='text';eye.className='fas fa-eye-slash';}
+  else{inp.type='password';eye.className='fas fa-eye';}
+}
+
+// ENTER KEY
+document.getElementById('password').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+
+// DO LOGIN — same logic as original
+async function doLogin(){
+  const pw=(document.getElementById('password').value||'').trim();
+  const err=document.getElementById('pw-err');
+  const btn=document.getElementById('loginBtn');
+  const ldg=document.getElementById('loading-inline');
+  err.style.display='none';
+  if(!pw){err.textContent='⚠ Password enter karo!';err.style.display='block';return;}
+  btn.style.display='none';ldg.style.display='block';
+  try{
+    const did=getDeviceId();
+    const fd=new FormData();
+    fd.append('password',pw);
+    fd.append('device_id',did);
+    const r=await fetch('/do_login',{method:'POST',body:fd});
+    const d=await r.json();
+    if(d.status==='success'){
+      if(d.vip)_lsSet('lp_vip_toast',d.package||'vip');
+      document.getElementById('success').style.display='flex';
+      setTimeout(function(){window.location.replace(d.redirect||'/index');},2000);
+    }else{
+      if(d.message==='banned'){window.location.replace('/banned');return;}
+      err.textContent=d.message||'Wrong password!';
+      err.style.display='block';
+      btn.style.display='block';ldg.style.display='none';
+    }
+  }catch(e){
+    err.textContent='Network error. Try again.';
+    err.style.display='block';
+    btn.style.display='block';ldg.style.display='none';
+  }
+}
+
+// STARTUP
+window.addEventListener('DOMContentLoaded',function(){
+  if(!sessionStorage.getItem('_vc')){
+    sessionStorage.setItem('_vc','1');
+    fetch('/track_visit',{method:'POST'}).catch(function(){});
+  }
+  loadLoginPopups();
+  document.getElementById('password').focus();
+});
+
+// POPUPS
+var lpopups=[],lcur=0;
+async function loadLoginPopups(){
+  try{
+    const r=await fetch('/api/login_popups');
+    if(!r.ok)return;
+    const d=await r.json();
+    lpopups=(d.popups||[]).filter(function(p){return !!p.image&&p.enabled!==false;});
+    if(lpopups.length)setTimeout(function(){showLPopup(0);},400);
+  }catch(e){}
+}
+function showLPopup(i){
+  lcur=i;const p=lpopups[i];
+  const url=(p.url||'').trim();
+  const img=document.getElementById('lp-popup-img');
+  const lnk=document.getElementById('lp-popup-link');
+  img.src='/static/images/'+p.image;
+  lnk.href=url||'#';
+  if(!url&&lpopups.length>1){lnk.onclick=function(e){e.preventDefault();showLPopup((i+1)%lpopups.length);};}
+  else if(!url){lnk.onclick=function(e){e.preventDefault();};}
+  else{lnk.onclick=null;}
+  const dots=document.getElementById('lp-popup-dots');
+  dots.innerHTML=lpopups.length>1?lpopups.map(function(_,j){
+    return '<button class="lpd'+(j===i?' a':'')+'" style="width:'+(j===i?'20':'8')+'px" onclick="event.stopPropagation();showLPopup('+j+')"></button>';
+  }).join(''):'';
+  document.getElementById('lp-popup-wrap').style.display='flex';
+}
+function closeLPopup(){document.getElementById('lp-popup-wrap').style.display='none';}
+document.getElementById('lp-popup-wrap').addEventListener('click',function(e){if(e.target===this)closeLPopup();});
+</script>
+</body>
+</html>

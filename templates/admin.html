@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#040d1a">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>LP MOD60 — Admin Panel</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#040d1a;--bg2:#071428;--bg3:#0a1d3a;
+  --cyan:#00e5ff;--cyan2:#00b4cc;
+  --gold:#ffc107;--text:#e0f7ff;--text2:#90caf9;
+  --b1:#00e5ff22;--b2:#00e5ff44;
+  --green:#00e676;--red:#ff5252;
+  --shadow:0 4px 24px #00000080;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+html,body{width:100%;overflow-x:hidden;background:var(--bg);color:var(--text);-webkit-text-size-adjust:100%}
+body{min-height:100vh;padding:14px 12px;overflow-y:auto}
+.wrap{max-width:860px;margin:0 auto}
+
+/* HEADER */
+.hdr{background:linear-gradient(135deg,#071428f0,#0a1d3af0);border:1px solid var(--b2);border-radius:20px;padding:20px 24px 16px;margin-bottom:14px;text-align:center;box-shadow:0 0 40px #00e5ff10,var(--shadow)}
+.hdr-title{font-family:'Rajdhani',sans-serif;font-size:1.9rem;font-weight:700;background:linear-gradient(135deg,#00e5ff,#82b1ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:2px;margin-bottom:4px}
+.hdr-sub{color:var(--text2);font-size:.8rem}
+
+/* SECTION */
+.section{background:var(--bg2);border:1px solid var(--b2);border-radius:20px;padding:22px;margin-bottom:14px;box-shadow:var(--shadow)}
+.sec-title{font-size:.78rem;font-weight:700;color:var(--cyan2);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;display:flex;align-items:center;gap:7px;padding-bottom:10px;border-bottom:1px solid var(--b1)}
+.sec-title i{color:var(--cyan)}
+
+/* FORM ELEMENTS */
+.lbl{font-size:.68rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;display:block}
+.inp{width:100%;padding:11px 16px;background:var(--bg);border:1.5px solid var(--b1);border-radius:12px;color:var(--text);font-size:.86rem;font-weight:600;outline:none;transition:.2s;margin-bottom:12px}
+.inp:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #00e5ff12}
+.inp::placeholder{color:#1e3a5a;font-weight:400}
+
+/* FILE UPLOAD */
+.upload-box{width:100%;padding:20px;background:var(--bg);border:2px dashed var(--b2);border-radius:14px;text-align:center;cursor:pointer;transition:.2s;margin-bottom:12px;position:relative}
+.upload-box:hover{border-color:var(--cyan);background:#00e5ff05}
+.upload-box input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-box i{font-size:1.8rem;color:var(--cyan2);display:block;margin-bottom:8px}
+.upload-box p{font-size:.78rem;color:var(--text2);font-weight:600}
+.upload-box .fname{font-size:.72rem;color:var(--cyan);margin-top:6px;font-weight:700}
+
+/* PREVIEW */
+.img-preview{width:80px;height:80px;border-radius:10px;object-fit:contain;background:var(--bg3);border:1px solid var(--b2);display:none;margin-bottom:12px}
+
+/* BUTTON */
+.btn{width:100%;padding:13px;border:none;border-radius:12px;font-size:.85rem;font-weight:800;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:.5px;text-transform:uppercase}
+.btn-cyan{background:linear-gradient(135deg,#0077b6,#023e8a);color:#fff;border-bottom:3px solid #011f4b;box-shadow:0 0 16px #0096c730}
+.btn-cyan:hover{background:linear-gradient(135deg,#0096c7,#0077b6);box-shadow:0 0 24px #00e5ff40;transform:translateY(-2px)}
+.btn-cyan:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-red{background:linear-gradient(135deg,#c62828,#b71c1c);color:#fff;border-bottom:3px solid #7f0000}
+.btn-red:hover{background:linear-gradient(135deg,#d32f2f,#c62828);transform:translateY(-2px)}
+.btn-gold{background:linear-gradient(135deg,#f9a825,#f57f17);color:#000;border-bottom:3px solid #e65100}
+.btn-gold:hover{background:linear-gradient(135deg,#fbc02d,#f9a825);transform:translateY(-2px)}
+.btn-sm{width:auto;padding:7px 14px;font-size:.7rem;border-radius:8px}
+
+/* TOAST */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:50px;font-weight:700;font-size:.82rem;z-index:99999;display:none;white-space:nowrap;animation:toastIn .3s ease}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(-16px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.toast.ok{background:linear-gradient(135deg,var(--green),#00c853);color:#000}
+.toast.err{background:linear-gradient(135deg,var(--red),#c62828);color:#fff}
+
+/* PAGE SELECTOR */
+.page-sel{display:flex;gap:8px;margin-bottom:14px}
+.page-opt{flex:1;padding:10px;background:var(--bg3);border:1.5px solid var(--b1);border-radius:12px;color:var(--text2);font-weight:700;font-size:.78rem;cursor:pointer;text-align:center;transition:.2s}
+.page-opt.active{background:#00e5ff15;border-color:var(--cyan);color:var(--cyan)}
+
+/* POPUP LIST */
+.popup-list{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.popup-item{background:var(--bg3);border:1px solid var(--b2);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px}
+.popup-item img{width:52px;height:52px;object-fit:cover;border-radius:8px;border:1px solid var(--b2);flex-shrink:0}
+.popup-info{flex:1;min-width:0}
+.popup-info .p-name{font-size:.78rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.popup-info .p-url{font-size:.65rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.popup-actions{display:flex;gap:6px;flex-shrink:0}
+
+/* EMOTE LIST */
+.emote-list{display:flex;flex-direction:column;gap:8px;margin-top:10px;max-height:320px;overflow-y:auto}
+.emote-item{background:var(--bg3);border:1px solid var(--b2);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px}
+.emote-item img{width:44px;height:44px;object-fit:contain;border-radius:8px;background:var(--bg2);flex-shrink:0}
+.emote-item .e-info{flex:1;min-width:0}
+.emote-item .e-name{font-size:.76rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.emote-item .e-id{font-size:.65rem;color:var(--text2)}
+.emote-item .e-del{background:none;border:1px solid #ff525240;color:#ff5252;border-radius:8px;padding:5px 10px;font-size:.68rem;cursor:pointer;transition:.2s;flex-shrink:0}
+.emote-item .e-del:hover{background:#ff525215;border-color:var(--red)}
+
+/* EDIT MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(4px);z-index:9999;display:none;justify-content:center;align-items:center;padding:16px}
+.modal{background:var(--bg2);border:1px solid var(--b2);border-radius:20px;padding:24px;width:100%;max-width:420px;box-shadow:0 0 60px #00e5ff12}
+.modal-title{font-size:.85rem;font-weight:800;color:var(--cyan);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.modal-close{margin-left:auto;background:none;border:none;color:var(--text2);cursor:pointer;font-size:1.1rem}
+
+@media(max-width:480px){.popup-item{flex-wrap:wrap}.popup-actions{width:100%;justify-content:flex-end}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hdr">
+  <div class="hdr-title">⚙ Admin Panel</div>
+  <div class="hdr-sub">LP MOD60 — Emote &amp; Popup Manager</div>
+</div>
+
+<!-- ══ ADD EMOTE ══ -->
+<div class="section">
+  <div class="sec-title"><i class="fas fa-plus-circle"></i>Add New Emote</div>
+
+  <label class="lbl">1. Upload Image</label>
+  <div class="upload-box" id="emote-upload-box">
+    <input type="file" id="emote-img-file" accept="image/*" onchange="previewEmoteImg(this)">
+    <i class="fas fa-cloud-upload-alt"></i>
+    <p>Click to select image</p>
+    <div class="fname" id="emote-fname"></div>
+  </div>
+  <img id="emote-img-preview" class="img-preview" src="" alt="preview">
+
+  <label class="lbl">2. Emote ID</label>
+  <input class="inp" type="text" id="emote-id" placeholder="e.g. 909051014" inputmode="numeric">
+
+  <label class="lbl">3. Emote Name</label>
+  <input class="inp" type="text" id="emote-name" placeholder="e.g. Dragon Swipe">
+
+  <button class="btn btn-cyan" id="add-emote-btn" onclick="addEmote()">
+    <i class="fas fa-plus"></i> Add Emote
+  </button>
+</div>
+
+<!-- ══ POPUP MANAGER ══ -->
+<div class="section">
+  <div class="sec-title"><i class="fas fa-image"></i>Popup Manager</div>
+
+  <div class="page-sel">
+    <div class="page-opt active" id="opt-login" onclick="selectPage('login')">
+      <i class="fas fa-sign-in-alt"></i> Login Page
+    </div>
+    <div class="page-opt" id="opt-index" onclick="selectPage('index')">
+      <i class="fas fa-gamepad"></i> Index Page
+    </div>
+  </div>
+
+  <label class="lbl">Popup Image</label>
+  <div class="upload-box" id="popup-upload-box">
+    <input type="file" id="popup-img-file" accept="image/*" onchange="previewPopupImg(this)">
+    <i class="fas fa-image"></i>
+    <p>Click to select popup image</p>
+    <div class="fname" id="popup-fname"></div>
+  </div>
+  <img id="popup-img-preview" class="img-preview" src="" alt="preview">
+
+  <label class="lbl">Click URL (optional)</label>
+  <input class="inp" type="url" id="popup-url" placeholder="https://t.me/lpmod60">
+
+  <button class="btn btn-cyan" id="add-popup-btn" onclick="addPopup()">
+    <i class="fas fa-upload"></i> Upload Popup
+  </button>
+
+  <!-- POPUP LIST -->
+  <div class="popup-list" id="popup-list"></div>
+</div>
+
+<!-- ══ EMOTE LIST ══ -->
+<div class="section">
+  <div class="sec-title"><i class="fas fa-list"></i>Emote List <span style="color:var(--text2);font-weight:500" id="emote-count"></span></div>
+  <input class="inp" type="text" id="emote-search" placeholder="Search emotes…" oninput="renderEmoteList()" style="margin-bottom:10px">
+  <div class="emote-list" id="emote-list"></div>
+</div>
+
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-bg" id="edit-modal">
+  <div class="modal">
+    <div class="modal-title">
+      <i class="fas fa-edit"></i> Edit Popup
+      <button class="modal-close" onclick="closeEditModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <input type="hidden" id="edit-popup-page">
+    <input type="hidden" id="edit-popup-index">
+    <label class="lbl">New Image (optional)</label>
+    <div class="upload-box" style="margin-bottom:12px">
+      <input type="file" id="edit-popup-img" accept="image/*" onchange="previewEditImg(this)">
+      <i class="fas fa-image"></i>
+      <p>Select new image or leave empty to keep current</p>
+      <div class="fname" id="edit-fname"></div>
+    </div>
+    <label class="lbl">Click URL</label>
+    <input class="inp" type="url" id="edit-popup-url" placeholder="https://...">
+    <button class="btn btn-gold" onclick="saveEditPopup()" style="margin-top:4px">
+      <i class="fas fa-save"></i> Save Changes
+    </button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+let selectedPage = 'login';
+let allEmotes = [];
+let allPopups = { login: [], index: [] };
+
+// ── TOAST ────────────────────────────────────────────────
+function showToast(msg, type='ok'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast '+type; t.style.display='block';
+  setTimeout(()=>t.style.display='none', 3000);
+}
+
+// ── PAGE SELECTOR ────────────────────────────────────────
+function selectPage(p){
+  selectedPage=p;
+  document.getElementById('opt-login').classList.toggle('active',p==='login');
+  document.getElementById('opt-index').classList.toggle('active',p==='index');
+  renderPopupList();
+}
+
+// ── IMAGE PREVIEWS ───────────────────────────────────────
+function previewEmoteImg(inp){
+  const f=inp.files[0]; if(!f)return;
+  document.getElementById('emote-fname').textContent=f.name;
+  const prev=document.getElementById('emote-img-preview');
+  prev.src=URL.createObjectURL(f); prev.style.display='block';
+}
+function previewPopupImg(inp){
+  const f=inp.files[0]; if(!f)return;
+  document.getElementById('popup-fname').textContent=f.name;
+  const prev=document.getElementById('popup-img-preview');
+  prev.src=URL.createObjectURL(f); prev.style.display='block';
+}
+function previewEditImg(inp){
+  const f=inp.files[0]; if(!f)return;
+  document.getElementById('edit-fname').textContent=f.name;
+}
+
+// ── ADD EMOTE ────────────────────────────────────────────
+async function addEmote(){
+  const file=document.getElementById('emote-img-file').files[0];
+  const id=document.getElementById('emote-id').value.trim();
+  const name=document.getElementById('emote-name').value.trim();
+  if(!file){showToast('⚠ Image select karo','err');return;}
+  if(!id){showToast('⚠ Emote ID daalo','err');return;}
+  if(!name){showToast('⚠ Emote naam daalo','err');return;}
+  const btn=document.getElementById('add-emote-btn');
+  btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Adding…';
+  const fd=new FormData();
+  fd.append('image',file); fd.append('id',id); fd.append('name',name);
+  try{
+    const r=await fetch('/admin/add_emote',{method:'POST',body:fd});
+    const d=await r.json();
+    if(d.ok){
+      showToast('✅ Emote add ho gaya!');
+      document.getElementById('emote-img-file').value='';
+      document.getElementById('emote-id').value='';
+      document.getElementById('emote-name').value='';
+      document.getElementById('emote-fname').textContent='';
+      document.getElementById('emote-img-preview').style.display='none';
+      loadEmotes();
+    } else {
+      showToast('❌ '+(d.message||'Error'),'err');
+    }
+  }catch(e){showToast('❌ Network error','err');}
+  btn.disabled=false; btn.innerHTML='<i class="fas fa-plus"></i> Add Emote';
+}
+
+// ── LOAD EMOTES ──────────────────────────────────────────
+async function loadEmotes(){
+  try{
+    const r=await fetch('/admin/get_emotes');
+    const d=await r.json();
+    allEmotes=d.emotes||[];
+    document.getElementById('emote-count').textContent='('+allEmotes.length+')';
+    renderEmoteList();
+  }catch(e){}
+}
+function renderEmoteList(){
+  const q=document.getElementById('emote-search').value.toLowerCase().trim();
+  const list=q?allEmotes.filter(e=>e.name.toLowerCase().includes(q)||e.id.includes(q)):allEmotes;
+  const el=document.getElementById('emote-list');
+  if(!list.length){el.innerHTML='<div style="text-align:center;color:var(--text2);padding:20px;font-size:.78rem">No emotes found</div>';return;}
+  el.innerHTML='';
+  const frag=document.createDocumentFragment();
+  list.forEach((em,i)=>{
+    const d=document.createElement('div');
+    d.className='emote-item';
+    d.innerHTML=`
+      <img src="/static/images/${em.image||em.img||em.id+'.png'}" loading="lazy"
+           onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22%3E%3Crect width=%2240%22 height=%2240%22 fill=%22%230a1d3a%22/%3E%3C/svg%3E';this.onerror=null">
+      <div class="e-info">
+        <div class="e-name">${em.name}</div>
+        <div class="e-id">ID: ${em.id}</div>
+      </div>
+      <button class="e-del" onclick="deleteEmote('${em.id}')"><i class="fas fa-trash"></i></button>`;
+    frag.appendChild(d);
+  });
+  el.appendChild(frag);
+}
+async function deleteEmote(id){
+  if(!confirm('Delete emote '+id+'?'))return;
+  try{
+    const r=await fetch('/admin/delete_emote',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});
+    const d=await r.json();
+    if(d.ok){showToast('✅ Emote delete ho gaya');loadEmotes();}
+    else showToast('❌ '+(d.message||'Error'),'err');
+  }catch(e){showToast('❌ Network error','err');}
+}
+
+// ── POPUP ADD ────────────────────────────────────────────
+async function addPopup(){
+  const file=document.getElementById('popup-img-file').files[0];
+  const url=document.getElementById('popup-url').value.trim();
+  if(!file){showToast('⚠ Image select karo','err');return;}
+  const btn=document.getElementById('add-popup-btn');
+  btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Uploading…';
+  const fd=new FormData();
+  fd.append('image',file); fd.append('url',url); fd.append('page',selectedPage);
+  try{
+    const r=await fetch('/admin/add_popup',{method:'POST',body:fd});
+    const d=await r.json();
+    if(d.ok){
+      showToast('✅ Popup upload ho gaya!');
+      document.getElementById('popup-img-file').value='';
+      document.getElementById('popup-url').value='';
+      document.getElementById('popup-fname').textContent='';
+      document.getElementById('popup-img-preview').style.display='none';
+      loadPopups();
+    } else showToast('❌ '+(d.message||'Error'),'err');
+  }catch(e){showToast('❌ Network error','err');}
+  btn.disabled=false; btn.innerHTML='<i class="fas fa-upload"></i> Upload Popup';
+}
+
+// ── LOAD POPUPS ──────────────────────────────────────────
+async function loadPopups(){
+  try{
+    const r=await fetch('/admin/get_popups');
+    const d=await r.json();
+    allPopups=d.popups||{login:[],index:[]};
+    renderPopupList();
+  }catch(e){}
+}
+function renderPopupList(){
+  const list=allPopups[selectedPage]||[];
+  const el=document.getElementById('popup-list');
+  if(!list.length){
+    el.innerHTML='<div style="text-align:center;color:var(--text2);padding:20px;font-size:.78rem">No popups on this page</div>';
+    return;
+  }
+  el.innerHTML='';
+  const frag=document.createDocumentFragment();
+  list.forEach((p,i)=>{
+    const d=document.createElement('div');
+    d.className='popup-item';
+    d.innerHTML=`
+      <img src="/static/images/${p.image}" loading="lazy"
+           onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2252%22 height=%2252%22%3E%3Crect width=%2252%22 height=%2252%22 fill=%22%230a1d3a%22/%3E%3C/svg%3E';this.onerror=null">
+      <div class="popup-info">
+        <div class="p-name">${p.image}</div>
+        <div class="p-url">${p.url||'No URL'}</div>
+      </div>
+      <div class="popup-actions">
+        <button class="btn btn-gold btn-sm" onclick="openEditModal('${selectedPage}',${i})"><i class="fas fa-edit"></i></button>
+        <button class="btn btn-red btn-sm" onclick="deletePopup('${selectedPage}',${i})"><i class="fas fa-trash"></i></button>
+      </div>`;
+    frag.appendChild(d);
+  });
+  el.appendChild(frag);
+}
+
+// ── DELETE POPUP ─────────────────────────────────────────
+async function deletePopup(page,idx){
+  if(!confirm('Delete this popup?'))return;
+  try{
+    const r=await fetch('/admin/delete_popup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({page,index:idx})});
+    const d=await r.json();
+    if(d.ok){showToast('✅ Popup delete ho gaya');loadPopups();}
+    else showToast('❌ '+(d.message||'Error'),'err');
+  }catch(e){showToast('❌ Network error','err');}
+}
+
+// ── EDIT POPUP ───────────────────────────────────────────
+function openEditModal(page,idx){
+  const p=allPopups[page][idx];
+  document.getElementById('edit-popup-page').value=page;
+  document.getElementById('edit-popup-index').value=idx;
+  document.getElementById('edit-popup-url').value=p.url||'';
+  document.getElementById('edit-popup-img').value='';
+  document.getElementById('edit-fname').textContent='';
+  document.getElementById('edit-modal').style.display='flex';
+}
+function closeEditModal(){document.getElementById('edit-modal').style.display='none';}
+async function saveEditPopup(){
+  const page=document.getElementById('edit-popup-page').value;
+  const idx=document.getElementById('edit-popup-index').value;
+  const url=document.getElementById('edit-popup-url').value.trim();
+  const file=document.getElementById('edit-popup-img').files[0];
+  const fd=new FormData();
+  fd.append('page',page); fd.append('index',idx); fd.append('url',url);
+  if(file)fd.append('image',file);
+  try{
+    const r=await fetch('/admin/edit_popup',{method:'POST',body:fd});
+    const d=await r.json();
+    if(d.ok){showToast('✅ Popup update ho gaya');closeEditModal();loadPopups();}
+    else showToast('❌ '+(d.message||'Error'),'err');
+  }catch(e){showToast('❌ Network error','err');}
+}
+
+document.getElementById('edit-modal').addEventListener('click',function(e){if(e.target===this)closeEditModal();});
+
+// ── INIT ─────────────────────────────────────────────────
+loadEmotes();
+loadPopups();
+</script>
+</body>
+</html>
